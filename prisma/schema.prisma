@@ -10,14 +10,14 @@ datasource db {
   provider = "sqlite"
 }
 
-// Een itemsoort die de gebruiker zelf kan invullen/maken, bv: "persoon", "boek", "plek"
+/// Een itemsoort die de gebruiker zelf kan invullen/maken, bv: "persoon", "boek", "plek"
 model ItemType {
   id   Int     @id @default(autoincrement())
   name String  @unique
   icon String?
 
-  // JSON-array met velddefinities:
-  // [{ "name": "verjaardag", "type": "date", "required": false }]
+  /// JSON-array met velddefinities:
+  /// [{ "name": "verjaardag", "type": "date", "required": false }]
   fieldDefinitions String @default("[]")
 
   items Item[]
@@ -28,7 +28,7 @@ model ItemType {
   @@map("soorten")
 }
 
-// Alles wat de gebruiker vastlegt: een notitie, een persoon, een boek.
+/// Alles wat de gebruiker vastlegt: een notitie, een persoon, een boek.
 model Item {
   id     Int      @id @default(autoincrement())
   typeId Int
@@ -38,10 +38,10 @@ model Item {
   body  String   @default("")
   date  DateTime @default(now())
 
-  // JSON-object met de ingevulde waarden: { "verjaardag": "1998-04-12" }
+  /// JSON-object met de ingevulde waarden: { "verjaardag": "1998-04-12" }
   fieldValues String @default("{}")
 
-  // Verbindingen waar dit item het vertrekpunt is, en waar het het doel is.
+  /// Verbindingen waar dit item het vertrekpunt is, en waar het het doel is.
   connectionsFrom Connection[] @relation("ConnectionFrom")
   connectionsTo   Connection[] @relation("ConnectionTo")
 
@@ -52,8 +52,8 @@ model Item {
   @@map("items")
 }
 
-// Connection tussen twee items. Eén keer opgeslagen, in beide richtingen
-// leesbaar: notitie A -> persoon B levert de notitie ook op de pagina van B.
+/// Connection tussen twee items. Eén keer opgeslagen, in beide richtingen
+/// leesbaar: notitie A -> persoon B levert de notitie ook op de pagina van B.
 model Connection {
   id Int @id @default(autoincrement())
 
