@@ -16,7 +16,7 @@ export default function NoteForm({ action, note = null, targets = [], submitLabe
         placeholder="Titel"
         aria-label="Titel"
         required
-        className="rounded-md border border-line-2 bg-card px-3 py-2"
+        className="field"
       />
       <MentionTextarea
         name={NOTE_FORM.BODY}
@@ -26,11 +26,11 @@ export default function NoteForm({ action, note = null, targets = [], submitLabe
         placeholder="Wat wil je opschrijven? Typ @ om naar iemand of iets te verwijzen."
         aria-label="Tekst"
         rows={note ? 12 : 4}
-        className="rounded-md border border-line-2 bg-card px-3 py-2"
+        className="field"
       />
       <button
         type="submit"
-        className="self-start rounded-md bg-action px-4 py-2 text-action-text"
+        className="self-start btn btn-solid"
       >
         {submitLabel}
       </button>

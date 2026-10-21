@@ -6,7 +6,7 @@ import { FIELD_KEYS } from "@/lib/fields";
 import FieldInput from "@/components/FieldInput";
 import MentionTextarea from "@/components/MentionTextarea";
 
-const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
+const inputClass = "field";
 
 /// Het formulier voor een item. Titel en tekst zijn vast; de rest komt uit de
 /// velddefinities van de soort. Er staat nergens in de code welke velden een
@@ -85,7 +85,7 @@ export default function DynamicItemForm({
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-md bg-action px-4 py-2 text-action-text disabled:opacity-60"
+        className="self-start btn btn-solid disabled:opacity-60"
       >
         {isPending ? "Bezig…" : submitLabel}
       </button>

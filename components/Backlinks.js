@@ -30,7 +30,7 @@ export default async function Backlinks({ userId, item }) {
 
   return (
     <section className="mt-12 border-t border-line pt-6">
-      <h2 className="text-sm font-semibold text-ink-3">
+      <h2 className="section-label">
         Genoemd in {connections.length > 0 ? `(${connections.length})` : ""}
       </h2>
 
@@ -48,7 +48,7 @@ export default async function Backlinks({ userId, item }) {
               <li key={fromItem.id}>
                 <Link
                   href={itemHref(fromItem.id, fromItem.type.name)}
-                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
+                  className="card card-link"
                 >
                   <p className="text-sm text-ink-3">
                     {fromItem.type.icon ? `${fromItem.type.icon} ` : ""}

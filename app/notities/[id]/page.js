@@ -39,24 +39,24 @@ export default async function NotePage({ params }) {
   }));
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
+    <main className="page">
       <div className="flex items-center justify-between">
-        <Link href={ROUTES.HOME} className="text-sm text-ink-3 underline">
+        <Link href={ROUTES.HOME} className="back-link">
           ← Alle notities
         </Link>
         <Link
           href={ROUTES.editNote(note.id)}
-          className="rounded-md border border-line-2 px-3 py-1.5 text-sm hover:border-ink-3"
+          className="btn btn-sm"
         >
           Bewerken
         </Link>
       </div>
 
       <p className="mt-8 text-sm text-ink-3">{formatDate(note.date)}</p>
-      <h1 className="mt-1 text-3xl font-semibold">{note.title}</h1>
+      <h1 className="mt-1 view-title">{note.title}</h1>
 
       {note.body ? (
-        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-ink">
+        <p className="mt-6 reading">
           {/* Alleen de echte verbindingen worden links, geen losse @'s. */}
           <MentionText text={note.body} targets={linked} />
         </p>
@@ -66,13 +66,13 @@ export default async function NotePage({ params }) {
 
       {linked.length > 0 && (
         <section className="mt-12 border-t border-line pt-6">
-          <h2 className="text-sm font-semibold text-ink-3">Gekoppeld aan</h2>
+          <h2 className="section-label">Gekoppeld aan</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {linked.map((item) => (
               <li key={item.id}>
                 <Link
                   href={itemHref(item.id, item.typeName)}
-                  className="block rounded-md border border-line bg-card px-3 py-1.5 text-sm hover:border-ink-3"
+                  className="chip chip-link"
                 >
                   {item.icon ? `${item.icon} ` : ""}
                   {item.title}

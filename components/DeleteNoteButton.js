@@ -20,7 +20,7 @@ export default function DeleteNoteButton({ id }) {
       <input type="hidden" name={NOTE_FORM.ID} value={id} />
       <button
         type="submit"
-        className="rounded-md border border-danger-line px-4 py-2 text-sm text-danger hover:bg-danger-soft"
+        className="btn btn-danger"
       >
         Verwijderen
       </button>

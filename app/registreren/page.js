@@ -11,8 +11,8 @@ export default async function RegisterPage() {
   if (await getCurrentUser()) redirect(ROUTES.HOME);
 
   return (
-    <main className="mx-auto max-w-sm px-6 py-16">
-      <h1 className="text-2xl font-semibold">Account maken</h1>
+    <main className="page page-narrow">
+      <h1 className="view-title">Account maken</h1>
 
       <AuthForm action={register} submitLabel="Account maken" newPassword />
 

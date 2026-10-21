@@ -23,8 +23,8 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Notities</h1>
+    <main className="page">
+      <h1 className="view-title">Notities</h1>
 
       <div className="mt-8">
         <NoteForm action={createNote} targets={targets} />
@@ -38,7 +38,7 @@ export default async function HomePage() {
             <li key={note.id}>
               <Link
                 href={ROUTES.note(note.id)}
-                className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
+                className="card card-link"
               >
                 <p className="text-sm text-ink-3">{formatDate(note.date)}</p>
                 <h2 className="mt-1 font-semibold">{note.title}</h2>

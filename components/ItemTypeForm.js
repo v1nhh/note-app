@@ -24,7 +24,7 @@ function makeRow(field = null) {
   };
 }
 
-const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
+const inputClass = "field";
 
 /// Hetzelfde formulier voor een nieuwe soort en voor een bestaande. Geef je
 /// type en fields mee, dan staat alles al ingevuld en gaat de id mee.
@@ -95,7 +95,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
         {rows.map((row, index) => (
           <div
             key={row.rowId}
-            className="flex flex-col gap-2 rounded-md border border-line bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center"
+            className="flex flex-col gap-2 card card-compact sm:flex-row sm:flex-wrap sm:items-center"
           >
             {/* Altijd meesturen, ook leeg: de lijsten moeten even lang
                 blijven, zodat de server ze per rij kan samenvoegen. */}
@@ -143,7 +143,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
               type="button"
               onClick={() => removeRow(row.rowId)}
               aria-label={`Veld ${index + 1} weghalen`}
-              className="rounded-md border border-line-2 px-3 py-2 text-sm text-ink-2 hover:border-ink-3"
+              className="btn btn-sm"
             >
               Weg
             </button>
@@ -171,7 +171,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
         <button
           type="button"
           onClick={() => setRows((current) => [...current, makeRow()])}
-          className="self-start rounded-md border border-line-2 px-3 py-2 text-sm hover:border-ink-3"
+          className="self-start btn btn-sm"
         >
           + Veld toevoegen
         </button>

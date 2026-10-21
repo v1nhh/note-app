@@ -7,6 +7,7 @@
 :root {
   --ground: #e6e6e6; /* de ondergrond achter alles */
   --card: #ffffff; /* kaarten, panelen, invoervelden */
+  --card-hover: #f9f9f9; /* een klikbare kaart onder de muis */
   --inset: #f5f5f5; /* iets dat in een kaart verzonken ligt */
   --line: #ededed; /* lijnen en randen */
   --line-2: #dedede; /* randen van invoervelden */
@@ -33,6 +34,7 @@
   :root {
     --ground: #0e0e0e;
     --card: #1a1a1a;
+    --card-hover: #212121;
     --inset: #232323;
     --line: #2a2a2a;
     --line-2: #3a3a3a;
@@ -57,6 +59,7 @@
 @theme inline {
   --color-ground: var(--ground);
   --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
   --color-inset: var(--inset);
   --color-line: var(--line);
   --color-line-2: var(--line-2);
@@ -94,5 +97,190 @@
   select,
   textarea {
     accent-color: var(--ink);
+  }
+
+  /* Wie met het toetsenbord werkt, ziet altijd waar de focus staat. Alleen
+     bij toetsenbordgebruik (focus-visible), niet na elke muisklik. */
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+}
+
+/* Onderdelen: een vaste vorm voor wat overal terugkomt. Eén naam in de code
+   ("btn btn-solid") in plaats van een rij van tien Tailwind-classes, zodat elke
+   knop er hetzelfde uitziet. Tailwind-classes ernaast (mt-6, self-start)
+   winnen nog steeds, voor de plaatsing. */
+@layer components {
+  /* De kolom waarin een pagina staat. Onderaan ruimte voor het dock (D3). */
+  .page {
+    width: 100%;
+    max-width: 46rem;
+    margin-inline: auto;
+    padding: 3rem 1.25rem 6rem;
+  }
+  @media (min-width: 640px) {
+    .page {
+      padding: 4rem 2.5rem 6rem;
+    }
+  }
+  .page-narrow {
+    max-width: 26rem;
+  }
+
+  /* Titels: rustig, niet vet, strak gespatieerd. clamp groeit mee met het
+     scherm, maar nooit kleiner dan 1.75rem of groter dan 2rem. */
+  .view-title {
+    font-size: clamp(1.75rem, 3.4vw, 2rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* Een klein kopje boven een blok: "GENOEMD IN", "GEKOPPELD AAN". */
+  .section-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* "← Alle notities": terug, onopvallend tot je eroverheen gaat. */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    transition: color 150ms;
+  }
+  .back-link:hover {
+    color: var(--ink);
+  }
+
+  /* Lopende tekst van een notitie of item: groter en ruimer, om te lezen. */
+  .reading {
+    max-width: 40rem;
+    white-space: pre-wrap;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  /* Kaarten: wit op grijs, zonder rand. De kleur van de ondergrond doet
+     het werk dat een lijn anders doet. */
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+  }
+  .card-compact {
+    padding: 0.75rem;
+  }
+  .card-link {
+    display: block;
+    transition: background-color 150ms;
+  }
+  .card-link:hover {
+    background: var(--card-hover);
+  }
+
+  /* Invoervelden. Bij typen een donkere rand in plaats van een blauwe gloed. */
+  .field {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--line-2);
+    border-radius: 10px;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+    color: var(--ink);
+    transition: border-color 150ms;
+  }
+  .field:hover {
+    border-color: var(--ink-3);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--ink);
+  }
+  .field-danger {
+    border-color: var(--danger-line);
+  }
+
+  /* Knoppen: rond, klein, vet. Gewoon is omlijnd; btn-solid is de ene
+     belangrijkste knop op een pagina; btn-danger is voor weggooien. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.625rem 1.125rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ink);
+    white-space: nowrap;
+    transition:
+      background-color 150ms,
+      border-color 150ms,
+      opacity 150ms;
+  }
+  .btn:hover {
+    background: var(--inset);
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn-sm {
+    padding: 0.5rem 0.875rem;
+  }
+  .btn-solid {
+    border-color: var(--action);
+    background: var(--action);
+    color: var(--action-text);
+  }
+  .btn-solid:hover {
+    background: var(--action);
+    opacity: 0.85;
+  }
+  .btn-danger {
+    border-color: var(--danger-line);
+    color: var(--danger);
+  }
+  .btn-danger:hover {
+    background: var(--danger-soft);
+  }
+  .btn-danger-solid {
+    border-color: var(--danger);
+    background: var(--danger);
+    color: var(--action-text);
+  }
+  .btn-danger-solid:hover {
+    background: var(--danger);
+    opacity: 0.85;
+  }
+
+  /* Een klein label met afgeronde hoeken: een veld van een soort, een
+     gekoppeld item. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 999px;
+    background: var(--inset);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+  }
+  .chip-link {
+    transition: background-color 150ms;
+  }
+  .chip-link:hover {
+    background: var(--line);
   }
 }

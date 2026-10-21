@@ -1,7 +1,7 @@
 import { FIELD_TYPES } from "@/lib/constants";
 import { FIELD_KEYS, fieldInputName } from "@/lib/fields";
 
-const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
+const inputClass = "field";
 
 /// Bouwt één invoerveld op uit één velddefinitie. Het type in de definitie
 /// bepaalt welk soort invoerveld je krijgt. Een nieuw veldtype is dus één

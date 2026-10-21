@@ -27,13 +27,13 @@ export default async function TypePage({ params }) {
   const editable = type.name !== NOTE_TYPE.name;
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.TYPES} className="text-sm text-ink-3 underline">
+    <main className="page">
+      <Link href={ROUTES.TYPES} className="back-link">
         ← Soorten
       </Link>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold">
+        <h1 className="view-title">
           {type.icon ? `${type.icon} ` : ""}
           {type.name}
         </h1>
@@ -41,14 +41,14 @@ export default async function TypePage({ params }) {
           {editable && (
             <Link
               href={ROUTES.editType(type.id)}
-              className="rounded-md border border-line-2 px-4 py-2 hover:border-ink-3"
+              className="btn"
             >
               Soort aanpassen
             </Link>
           )}
           <Link
             href={ROUTES.newItem(type.id)}
-            className="rounded-md bg-action px-4 py-2 text-action-text"
+            className="btn btn-solid"
           >
             Nieuw: {type.name}
           </Link>
@@ -67,7 +67,7 @@ export default async function TypePage({ params }) {
               <li key={item.id}>
                 <Link
                   href={ROUTES.item(item.id)}
-                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
+                  className="card card-link"
                 >
                   <h2 className="font-semibold">{item.title}</h2>
 

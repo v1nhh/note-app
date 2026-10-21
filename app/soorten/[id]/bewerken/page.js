@@ -20,12 +20,12 @@ export default async function EditTypePage({ params }) {
   const fields = parseFieldDefinitions(type.fieldDefinitions);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.type(type.id)} className="text-sm text-ink-3 underline">
+    <main className="page">
+      <Link href={ROUTES.type(type.id)} className="back-link">
         ← {type.name}
       </Link>
 
-      <h1 className="mt-8 text-3xl font-semibold">Soort aanpassen</h1>
+      <h1 className="mt-8 view-title">Soort aanpassen</h1>
 
       {/* key: na bewaren komt de pagina met nieuwe velden terug. Een nieuwe
           key laat React het formulier opnieuw opbouwen in plaats van de oude

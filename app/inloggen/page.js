@@ -12,8 +12,8 @@ export default async function LoginPage() {
   if (await getCurrentUser()) redirect(ROUTES.HOME);
 
   return (
-    <main className="mx-auto max-w-sm px-6 py-16">
-      <h1 className="text-2xl font-semibold">Inloggen</h1>
+    <main className="page page-narrow">
+      <h1 className="view-title">Inloggen</h1>
 
       <AuthForm action={login} submitLabel="Inloggen" />
 

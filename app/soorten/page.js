@@ -18,10 +18,10 @@ export default async function TypesPage() {
   });
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
+    <main className="page">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold">Soorten</h1>
-        <Link href={ROUTES.NEW_TYPE} className="rounded-md bg-action px-4 py-2 text-action-text">
+        <h1 className="view-title">Soorten</h1>
+        <Link href={ROUTES.NEW_TYPE} className="btn btn-solid">
           Nieuwe soort
         </Link>
       </div>
@@ -42,7 +42,7 @@ export default async function TypesPage() {
               <li key={type.id}>
                 <Link
                   href={ROUTES.type(type.id)}
-                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
+                  className="card card-link"
                 >
                   <h2 className="font-semibold">
                     {type.icon ? `${type.icon} ` : ""}
@@ -57,7 +57,7 @@ export default async function TypesPage() {
                       {fields.map((field) => (
                         <li
                           key={field[FIELD_KEYS.NAME]}
-                          className="rounded-md border border-line px-2 py-1 text-sm text-ink-2"
+                          className="chip"
                         >
                           {field[FIELD_KEYS.NAME]} · {FIELD_TYPE_LABELS[field[FIELD_KEYS.TYPE]]}
                           {field[FIELD_KEYS.REQUIRED] ? " · verplicht" : ""}

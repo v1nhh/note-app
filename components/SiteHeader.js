@@ -35,7 +35,7 @@ export default async function SiteHeader() {
           <form action={logout}>
             <button
               type="submit"
-              className="rounded-md border border-line-2 px-3 py-1.5 text-sm hover:border-ink-3"
+              className="btn btn-sm"
             >
               Uitloggen
             </button>

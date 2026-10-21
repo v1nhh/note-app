@@ -30,12 +30,12 @@ export default async function EditItemPage({ params }) {
   const values = parseFieldValues(item.fieldValues);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.item(item.id)} className="text-sm text-ink-3 underline">
+    <main className="page">
+      <Link href={ROUTES.item(item.id)} className="back-link">
         ← {item.title}
       </Link>
 
-      <h1 className="mt-8 text-3xl font-semibold">
+      <h1 className="mt-8 view-title">
         {item.type.icon ? `${item.type.icon} ` : ""}
         {item.type.name} bewerken
       </h1>

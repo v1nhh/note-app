@@ -18,12 +18,12 @@ export default async function EditNotePage({ params }) {
   const targets = await mentionTargets(user.id);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.note(note.id)} className="text-sm text-ink-3 underline">
+    <main className="page">
+      <Link href={ROUTES.note(note.id)} className="back-link">
         ← Terug naar de notitie
       </Link>
 
-      <h1 className="mt-8 text-2xl font-semibold">Notitie bewerken</h1>
+      <h1 className="mt-8 view-title">Notitie bewerken</h1>
 
       <div className="mt-6">
         <NoteForm

@@ -10,7 +10,7 @@ import Highlight from "@/components/Highlight";
 
 export const metadata = { title: "Zoeken" };
 
-const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
+const inputClass = "field";
 
 /// Een waarde uit de URL. ?q=a&q=b geeft een lijst; dan nemen we de eerste.
 function readParam(params, name) {
@@ -41,8 +41,8 @@ export default async function SearchPage({ searchParams }) {
     : [];
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Zoeken</h1>
+    <main className="page">
+      <h1 className="view-title">Zoeken</h1>
 
       {/* Een GET-formulier: de zoekopdracht komt in de URL. Form van Next
           laadt de nieuwe resultaten zonder de hele pagina te herladen. */}
@@ -73,7 +73,7 @@ export default async function SearchPage({ searchParams }) {
             </option>
           ))}
         </select>
-        <button type="submit" className="rounded-md bg-action px-4 py-2 text-action-text">
+        <button type="submit" className="btn btn-solid">
           Zoeken
         </button>
       </Form>
@@ -99,7 +99,7 @@ export default async function SearchPage({ searchParams }) {
               <li key={item.id}>
                 <Link
                   href={itemHref(item.id, item.type.name)}
-                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
+                  className="card card-link"
                 >
                   <p className="text-sm text-ink-3">
                     {item.type.icon ? `${item.type.icon} ` : ""}

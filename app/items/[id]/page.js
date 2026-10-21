@@ -28,14 +28,14 @@ export default async function ItemPage({ params }) {
   const targets = (await mentionTargets(user.id)).filter((target) => target.id !== item.id);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
+    <main className="page">
       <div className="flex items-center justify-between">
-        <Link href={ROUTES.type(item.type.id)} className="text-sm text-ink-3 underline">
+        <Link href={ROUTES.type(item.type.id)} className="back-link">
           ← {item.type.name}
         </Link>
         <Link
           href={ROUTES.editItem(item.id)}
-          className="rounded-md border border-line-2 px-3 py-1.5 text-sm hover:border-ink-3"
+          className="btn btn-sm"
         >
           Bewerken
         </Link>
@@ -45,10 +45,10 @@ export default async function ItemPage({ params }) {
         {item.type.icon ? `${item.type.icon} ` : ""}
         {item.type.name}
       </p>
-      <h1 className="mt-1 text-3xl font-semibold">{item.title}</h1>
+      <h1 className="mt-1 view-title">{item.title}</h1>
 
       {fields.length > 0 && (
-        <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-md border border-line bg-card p-4 text-sm">
+        <dl className="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 card text-sm">
           {fields.map((field) => (
             <div key={field[FIELD_KEYS.NAME]} className="contents">
               <dt className="text-ink-3">{field[FIELD_KEYS.NAME]}</dt>
@@ -59,7 +59,7 @@ export default async function ItemPage({ params }) {
       )}
 
       {item.body && (
-        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-ink">
+        <p className="mt-6 reading">
           <MentionText text={item.body} targets={targets} />
         </p>
       )}

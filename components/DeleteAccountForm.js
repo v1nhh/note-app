@@ -16,7 +16,7 @@ export default function DeleteAccountForm({ summary }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="self-start rounded-md border border-danger-line px-4 py-2 text-sm text-danger hover:bg-danger-soft"
+        className="self-start btn btn-danger"
       >
         Account wissen…
       </button>
@@ -41,7 +41,7 @@ export default function DeleteAccountForm({ summary }) {
           autoComplete="current-password"
           required
           autoFocus
-          className="rounded-md border border-danger-line bg-card px-3 py-2"
+          className="field field-danger"
         />
       </label>
 
@@ -55,14 +55,14 @@ export default function DeleteAccountForm({ summary }) {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-danger px-4 py-2 text-sm text-action-text disabled:opacity-60"
+          className="btn btn-danger-solid disabled:opacity-60"
         >
           {isPending ? "Bezig met wissen…" : "Alles definitief wissen"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-md border border-line-2 bg-card px-4 py-2 text-sm hover:border-ink-3"
+          className="btn"
         >
           Annuleren
         </button>
