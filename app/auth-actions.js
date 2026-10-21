@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { createSession, destroySession } from "@/lib/session";
+import { starterTypeRows, createStarterExamples } from "@/lib/starter-set";
 import { AUTH_FORM, ROUTES } from "@/lib/constants";
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -51,7 +52,11 @@ export async function register(previousState, formData) {
       data: {
         email: credentials.email,
         passwordHash: await hashPassword(credentials.password),
+        // De startset in dezelfde query: account en soorten ontstaan samen,
+        // of geen van beide. Nooit een account zonder soorten.
+        itemTypes: { create: starterTypeRows() },
       },
+      include: { itemTypes: true },
     });
   } catch (error) {
     // P2002: het e-mailadres bestaat al (de @unique in het schema).
@@ -59,6 +64,14 @@ export async function register(previousState, formData) {
       return { error: "Dit e-mailadres is al in gebruik.", email: credentials.email };
     }
     throw error;
+  }
+
+  // De voorbeelden zijn mooi meegenomen, maar niet nodig. Lukt het niet, dan
+  // heb je nog steeds een werkend account; registreren mag er niet op stranden.
+  try {
+    await createStarterExamples(user.id, user.itemTypes);
+  } catch (error) {
+    console.error("Startvoorbeelden aanmaken mislukt:", error);
   }
 
   await createSession(user.id);
