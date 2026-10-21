@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { findNoteForUser } from "@/lib/notes";
-import { splitMentions } from "@/lib/mentions";
+import { itemHref } from "@/lib/links";
 import { ROUTES } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
+import MentionText from "@/components/MentionText";
+import Backlinks from "@/components/Backlinks";
 
 export default async function NotePage({ params }) {
   const user = await requireUser();
@@ -29,10 +31,12 @@ export default async function NotePage({ params }) {
       },
     },
   });
-  const linked = connections.map((connection) => connection.toItem);
-
-  // Alleen de echte verbindingen markeren in de tekst, geen losse @'s.
-  const parts = splitMentions(note.body, linked);
+  const linked = connections.map(({ toItem }) => ({
+    id: toItem.id,
+    title: toItem.title,
+    typeName: toItem.type.name,
+    icon: toItem.type.icon,
+  }));
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
@@ -53,15 +57,8 @@ export default async function NotePage({ params }) {
 
       {note.body ? (
         <p className="mt-6 whitespace-pre-wrap leading-relaxed text-neutral-800">
-          {parts.map((part, index) =>
-            part.target ? (
-              <span key={index} className="font-medium text-blue-700">
-                {part.text}
-              </span>
-            ) : (
-              part.text
-            ),
-          )}
+          {/* Alleen de echte verbindingen worden links, geen losse @'s. */}
+          <MentionText text={note.body} targets={linked} />
         </p>
       ) : (
         <p className="mt-6 text-neutral-500">Deze notitie heeft nog geen tekst.</p>
@@ -72,18 +69,23 @@ export default async function NotePage({ params }) {
           <h2 className="text-sm font-semibold text-neutral-500">Gekoppeld aan</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {linked.map((item) => (
-              <li
-                key={item.id}
-                className="rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-sm"
-              >
-                {item.type.icon ? `${item.type.icon} ` : ""}
-                {item.title}
-                <span className="ml-2 text-neutral-500">{item.type.name}</span>
+              <li key={item.id}>
+                <Link
+                  href={itemHref(item.id, item.typeName)}
+                  className="block rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-sm hover:border-neutral-400"
+                >
+                  {item.icon ? `${item.icon} ` : ""}
+                  {item.title}
+                  <span className="ml-2 text-neutral-500">{item.typeName}</span>
+                </Link>
               </li>
             ))}
           </ul>
         </section>
       )}
+
+      {/* Ook een notitie kan genoemd worden, door een andere notitie. */}
+      <Backlinks userId={user.id} item={note} />
     </main>
   );
 }
