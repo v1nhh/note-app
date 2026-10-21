@@ -20,9 +20,17 @@ export default async function NotePage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.HOME} className="text-sm text-neutral-500 underline">
-        ← Alle notities
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link href={ROUTES.HOME} className="text-sm text-neutral-500 underline">
+          ← Alle notities
+        </Link>
+        <Link
+          href={ROUTES.editNote(note.id)}
+          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:border-neutral-500"
+        >
+          Bewerken
+        </Link>
+      </div>
 
       <p className="mt-8 text-sm text-neutral-500">{formatDate(note.date)}</p>
       <h1 className="mt-1 text-3xl font-semibold">{note.title}</h1>
