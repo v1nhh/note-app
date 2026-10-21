@@ -1,56 +1,39 @@
 @import "tailwindcss";
 
 /* Ontwerptokens: elke kleur heeft een naam naar zijn rol, niet naar hoe hij
-   eruitziet. "ink-3" is de kleur voor bijzaken, of dat nu grijs op wit is of
-   grijs op zwart. De componenten gebruiken alleen deze namen; licht en donker
-   verschillen alleen hieronder. */
+   eruitziet. light-dark(licht, donker) kiest de waarde die past bij het
+   color-scheme van de pagina. Zo staan licht en donker per kleur naast
+   elkaar, op één regel. */
 :root {
-  --ground: #e6e6e6; /* de ondergrond achter alles */
-  --card: #ffffff; /* kaarten, panelen, invoervelden */
-  --card-hover: #f9f9f9; /* een klikbare kaart onder de muis */
-  --inset: #f5f5f5; /* iets dat in een kaart verzonken ligt */
-  --line: #ededed; /* lijnen en randen */
-  --line-2: #dedede; /* randen van invoervelden */
-  --ink: #000000; /* gewone tekst */
-  --ink-2: #222222; /* lopende tekst */
-  --ink-3: #666666; /* bijzaken: datums, labels, uitleg */
-  --action: #000000; /* de belangrijkste knop */
-  --action-text: #ffffff;
-  --link: #2451c9; /* @verwijzingen */
-  --link-soft: #eef2fc;
-  --hit: #fff2cc; /* zoekwoord gemarkeerd */
-  --danger: #b4241a; /* weggooien, fouten */
-  --danger-soft: #fceceb;
-  --danger-line: #f1c4c0;
+  /* Standaard: volg het systeem. De browser kiest dan zelf licht of donker. */
+  color-scheme: light dark;
 
-  /* Laat de browser ook zijn eigen onderdelen (schuifbalken, datumkiezer)
-     in de juiste kleur tekenen. */
-  color-scheme: light;
+  --ground: light-dark(#e6e6e6, #0e0e0e); /* de ondergrond achter alles */
+  --card: light-dark(#ffffff, #1a1a1a); /* kaarten, panelen, invoervelden */
+  --card-hover: light-dark(#f9f9f9, #212121); /* een klikbare kaart onder de muis */
+  --inset: light-dark(#f5f5f5, #232323); /* iets dat in een kaart verzonken ligt */
+  --line: light-dark(#ededed, #2a2a2a); /* lijnen en randen */
+  --line-2: light-dark(#dedede, #3a3a3a); /* randen van invoervelden */
+  --ink: light-dark(#000000, #f2f2f2); /* gewone tekst */
+  --ink-2: light-dark(#222222, #d6d6d6); /* lopende tekst */
+  --ink-3: light-dark(#666666, #9a9a9a); /* bijzaken: datums, labels, uitleg */
+  --action: light-dark(#000000, #f2f2f2); /* de belangrijkste knop */
+  --action-text: light-dark(#ffffff, #000000);
+  --link: light-dark(#2451c9, #8fb0ff); /* @verwijzingen */
+  --link-soft: light-dark(#eef2fc, #1c2742);
+  --hit: light-dark(#fff2cc, #4a3f14); /* zoekwoord gemarkeerd */
+  --danger: light-dark(#b4241a, #ff8a80); /* weggooien, fouten */
+  --danger-soft: light-dark(#fceceb, #2e1614);
+  --danger-line: light-dark(#f1c4c0, #5c2a26);
 }
 
-/* Donker volgt de instelling van je systeem. Alleen de waarden wisselen;
-   geen enkel component hoeft te weten welke modus aan staat. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ground: #0e0e0e;
-    --card: #1a1a1a;
-    --card-hover: #212121;
-    --inset: #232323;
-    --line: #2a2a2a;
-    --line-2: #3a3a3a;
-    --ink: #f2f2f2;
-    --ink-2: #d6d6d6;
-    --ink-3: #9a9a9a;
-    --action: #f2f2f2;
-    --action-text: #000000;
-    --link: #8fb0ff;
-    --link-soft: #1c2742;
-    --hit: #4a3f14;
-    --danger: #ff8a80;
-    --danger-soft: #2e1614;
-    --danger-line: #5c2a26;
-    color-scheme: dark;
-  }
+/* Een eigen keuze in Instellingen wint van het systeem. De server zet
+   data-theme op <html> (zie layout.js); bij "systeem" staat er niets. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 /* De tokens als Tailwind-kleuren, zodat je bg-card, text-ink-3 en
@@ -112,7 +95,7 @@
    knop er hetzelfde uitziet. Tailwind-classes ernaast (mt-6, self-start)
    winnen nog steeds, voor de plaatsing. */
 @layer components {
-  /* De kolom waarin een pagina staat. Onderaan ruimte voor het dock (D3). */
+  /* De kolom waarin een pagina staat. Onderaan ruimte voor het dock. */
   .page {
     width: 100%;
     max-width: 46rem;

@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/session";
+import { readTheme } from "@/lib/theme";
+import { THEMES } from "@/lib/constants";
 import Dock from "@/components/Dock";
 
 // next/font haalt het lettertype op tijdens het bouwen en serveert het zelf.
@@ -19,10 +21,16 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   // Uitgelogd geen dock: op de inlogpagina heb je nergens heen te gaan.
-  const user = await getCurrentUser();
+  const [user, theme] = await Promise.all([getCurrentUser(), readTheme()]);
 
   return (
-    <html lang="nl" className={inter.variable}>
+    <html
+      lang="nl"
+      className={inter.variable}
+      // De server zet de gekozen weergave er al in, dus de eerste pagina is
+      // meteen goed. Bij "systeem" geen attribuut: dan beslist de browser.
+      data-theme={theme === THEMES.SYSTEM ? undefined : theme}
+    >
       <body className="min-h-screen bg-ground font-sans text-ink antialiased">
         {children}
         {user && <Dock />}
