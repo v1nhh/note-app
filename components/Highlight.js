@@ -12,7 +12,7 @@ export default function Highlight({ text, query }) {
     while (index !== -1) {
       if (index > cursor) parts.push(text.slice(cursor, index));
       parts.push(
-        <mark key={index} className="rounded bg-yellow-100 px-0.5 text-inherit">
+        <mark key={index} className="rounded bg-hit px-0.5 text-inherit">
           {text.slice(index, index + needle.length)}
         </mark>,
       );

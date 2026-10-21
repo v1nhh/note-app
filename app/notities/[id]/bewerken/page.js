@@ -19,7 +19,7 @@ export default async function EditNotePage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.note(note.id)} className="text-sm text-neutral-500 underline">
+      <Link href={ROUTES.note(note.id)} className="text-sm text-ink-3 underline">
         ← Terug naar de notitie
       </Link>
 
@@ -34,7 +34,7 @@ export default async function EditNotePage({ params }) {
         />
       </div>
 
-      <div className="mt-12 border-t border-neutral-200 pt-6">
+      <div className="mt-12 border-t border-line pt-6">
         <DeleteNoteButton id={note.id} />
       </div>
     </main>

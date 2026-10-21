@@ -24,7 +24,7 @@ function makeRow(field = null) {
   };
 }
 
-const inputClass = "rounded-md border border-neutral-300 bg-white px-3 py-2";
+const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
 
 /// Hetzelfde formulier voor een nieuwe soort en voor een bestaande. Geef je
 /// type en fields mee, dan staat alles al ingevuld en gaat de id mee.
@@ -86,7 +86,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
 
       <fieldset className="flex flex-col gap-3">
         <legend className="font-semibold">Velden</legend>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-ink-3">
           {editing
             ? "Hernoem je een veld, dan verhuizen de ingevulde waarden mee."
             : "Welke gegevens wil je bij elk item van deze soort bijhouden? Een soort zonder velden mag ook."}
@@ -95,7 +95,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
         {rows.map((row, index) => (
           <div
             key={row.rowId}
-            className="flex flex-col gap-2 rounded-md border border-neutral-200 bg-white p-3 sm:flex-row sm:flex-wrap sm:items-center"
+            className="flex flex-col gap-2 rounded-md border border-line bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center"
           >
             {/* Altijd meesturen, ook leeg: de lijsten moeten even lang
                 blijven, zodat de server ze per rij kan samenvoegen. */}
@@ -143,7 +143,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
               type="button"
               onClick={() => removeRow(row.rowId)}
               aria-label={`Veld ${index + 1} weghalen`}
-              className="rounded-md border border-neutral-300 px-3 py-2 text-sm text-neutral-600 hover:border-neutral-500"
+              className="rounded-md border border-line-2 px-3 py-2 text-sm text-ink-2 hover:border-ink-3"
             >
               Weg
             </button>
@@ -161,7 +161,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
             />
 
             {row.original && row.original !== row[FIELD_KEYS.NAME].trim() && (
-              <p className="text-xs text-neutral-500 sm:basis-full">
+              <p className="text-xs text-ink-3 sm:basis-full">
                 Was: {row.original}. De waarden verhuizen mee.
               </p>
             )}
@@ -171,7 +171,7 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
         <button
           type="button"
           onClick={() => setRows((current) => [...current, makeRow()])}
-          className="self-start rounded-md border border-neutral-300 px-3 py-2 text-sm hover:border-neutral-500"
+          className="self-start rounded-md border border-line-2 px-3 py-2 text-sm hover:border-ink-3"
         >
           + Veld toevoegen
         </button>
@@ -180,14 +180,14 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
       {/* Een veld weghalen neemt alles mee wat erin stond. Dat zeg je
           vóór het bewaren, niet erna. */}
       {dropped.length > 0 && (
-        <div role="status" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+        <div role="status" className="rounded-md border border-danger-line bg-danger-soft p-3 text-sm text-danger">
           <p className="font-semibold">Deze velden gaan weg, met alles wat erin staat:</p>
           <p className="mt-1">{dropped.join(", ")}</p>
         </div>
       )}
 
       {state?.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger">
           {state.error}
         </p>
       )}
@@ -195,8 +195,8 @@ export default function ItemTypeForm({ action, type = null, fields = [] }) {
       <button
         type="submit"
         disabled={isPending}
-        className={`self-start rounded-md px-4 py-2 text-white disabled:opacity-60 ${
-          dropped.length > 0 ? "bg-red-700" : "bg-neutral-900"
+        className={`self-start rounded-md px-4 py-2 text-action-text disabled:opacity-60 ${
+          dropped.length > 0 ? "bg-danger" : "bg-action"
         }`}
       >
         {isPending

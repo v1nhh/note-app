@@ -29,13 +29,13 @@ export default async function Backlinks({ userId, item }) {
   ]);
 
   return (
-    <section className="mt-12 border-t border-neutral-200 pt-6">
-      <h2 className="text-sm font-semibold text-neutral-500">
+    <section className="mt-12 border-t border-line pt-6">
+      <h2 className="text-sm font-semibold text-ink-3">
         Genoemd in {connections.length > 0 ? `(${connections.length})` : ""}
       </h2>
 
       {connections.length === 0 ? (
-        <p className="mt-3 text-sm text-neutral-500">
+        <p className="mt-3 text-sm text-ink-3">
           Nog nergens genoemd. Schrijf @{item.title} in een notitie, dan verschijnt
           die hier.
         </p>
@@ -48,17 +48,17 @@ export default async function Backlinks({ userId, item }) {
               <li key={fromItem.id}>
                 <Link
                   href={itemHref(fromItem.id, fromItem.type.name)}
-                  className="block rounded-md border border-neutral-200 bg-white p-4 hover:border-neutral-400"
+                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
                 >
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-ink-3">
                     {fromItem.type.icon ? `${fromItem.type.icon} ` : ""}
                     {formatDate(fromItem.date)}
                   </p>
                   <h3 className="mt-1 font-semibold">{fromItem.title}</h3>
                   {excerpt && (
-                    <p className="mt-2 text-sm text-neutral-700">
+                    <p className="mt-2 text-sm text-ink-2">
                       {excerpt.before}
-                      <mark className="rounded bg-blue-50 px-0.5 font-medium text-blue-700">
+                      <mark className="rounded bg-link-soft px-0.5 font-medium text-link">
                         {excerpt.mention}
                       </mark>
                       {excerpt.after}

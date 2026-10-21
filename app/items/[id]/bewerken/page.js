@@ -31,7 +31,7 @@ export default async function EditItemPage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.item(item.id)} className="text-sm text-neutral-500 underline">
+      <Link href={ROUTES.item(item.id)} className="text-sm text-ink-3 underline">
         ← {item.title}
       </Link>
 
@@ -41,7 +41,7 @@ export default async function EditItemPage({ params }) {
       </h1>
 
       {mentionedCount > 0 && (
-        <p className="mt-3 text-sm text-neutral-600">
+        <p className="mt-3 text-sm text-ink-2">
           Genoemd in {mentionedCount} {mentionedCount === 1 ? "stuk" : "stukken"}. Geef je
           een nieuwe titel, dan wordt @{item.title} daar ook aangepast.
         </p>
@@ -56,7 +56,7 @@ export default async function EditItemPage({ params }) {
         submitLabel="Wijzigingen bewaren"
       />
 
-      <div className="mt-12 border-t border-neutral-200 pt-6">
+      <div className="mt-12 border-t border-line pt-6">
         <DeleteItemButton id={item.id} title={item.title} mentionedCount={mentionedCount} />
       </div>
     </main>

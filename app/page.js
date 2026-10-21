@@ -31,19 +31,19 @@ export default async function HomePage() {
       </div>
 
       {notes.length === 0 ? (
-        <p className="mt-10 text-neutral-500">Nog geen notities.</p>
+        <p className="mt-10 text-ink-3">Nog geen notities.</p>
       ) : (
         <ul className="mt-10 flex flex-col gap-4">
           {notes.map((note) => (
             <li key={note.id}>
               <Link
                 href={ROUTES.note(note.id)}
-                className="block rounded-md border border-neutral-200 bg-white p-4 hover:border-neutral-400"
+                className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
               >
-                <p className="text-sm text-neutral-500">{formatDate(note.date)}</p>
+                <p className="text-sm text-ink-3">{formatDate(note.date)}</p>
                 <h2 className="mt-1 font-semibold">{note.title}</h2>
                 {note.body && (
-                  <p className="mt-2 line-clamp-3 whitespace-pre-wrap text-neutral-700">
+                  <p className="mt-2 line-clamp-3 whitespace-pre-wrap text-ink-2">
                     {note.body}
                   </p>
                 )}

@@ -21,7 +21,7 @@ export default async function EditTypePage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.type(type.id)} className="text-sm text-neutral-500 underline">
+      <Link href={ROUTES.type(type.id)} className="text-sm text-ink-3 underline">
         ← {type.name}
       </Link>
 

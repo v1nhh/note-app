@@ -22,7 +22,7 @@ export default function AuthForm({ action, submitLabel, newPassword = false }) {
         placeholder="E-mailadres"
         autoComplete="email"
         required
-        className="rounded-md border border-neutral-300 bg-white px-3 py-2"
+        className="rounded-md border border-line-2 bg-card px-3 py-2"
       />
       <input
         type="password"
@@ -30,11 +30,11 @@ export default function AuthForm({ action, submitLabel, newPassword = false }) {
         placeholder="Wachtwoord"
         autoComplete={newPassword ? "new-password" : "current-password"}
         required
-        className="rounded-md border border-neutral-300 bg-white px-3 py-2"
+        className="rounded-md border border-line-2 bg-card px-3 py-2"
       />
 
       {state?.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger">
           {state.error}
         </p>
       )}
@@ -42,7 +42,7 @@ export default function AuthForm({ action, submitLabel, newPassword = false }) {
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-md bg-neutral-900 px-4 py-2 text-white disabled:opacity-60"
+        className="self-start rounded-md bg-action px-4 py-2 text-action-text disabled:opacity-60"
       >
         {isPending ? "Bezig…" : submitLabel}
       </button>

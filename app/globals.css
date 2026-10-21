@@ -1,1 +1,98 @@
 @import "tailwindcss";
+
+/* Ontwerptokens: elke kleur heeft een naam naar zijn rol, niet naar hoe hij
+   eruitziet. "ink-3" is de kleur voor bijzaken, of dat nu grijs op wit is of
+   grijs op zwart. De componenten gebruiken alleen deze namen; licht en donker
+   verschillen alleen hieronder. */
+:root {
+  --ground: #e6e6e6; /* de ondergrond achter alles */
+  --card: #ffffff; /* kaarten, panelen, invoervelden */
+  --inset: #f5f5f5; /* iets dat in een kaart verzonken ligt */
+  --line: #ededed; /* lijnen en randen */
+  --line-2: #dedede; /* randen van invoervelden */
+  --ink: #000000; /* gewone tekst */
+  --ink-2: #222222; /* lopende tekst */
+  --ink-3: #666666; /* bijzaken: datums, labels, uitleg */
+  --action: #000000; /* de belangrijkste knop */
+  --action-text: #ffffff;
+  --link: #2451c9; /* @verwijzingen */
+  --link-soft: #eef2fc;
+  --hit: #fff2cc; /* zoekwoord gemarkeerd */
+  --danger: #b4241a; /* weggooien, fouten */
+  --danger-soft: #fceceb;
+  --danger-line: #f1c4c0;
+
+  /* Laat de browser ook zijn eigen onderdelen (schuifbalken, datumkiezer)
+     in de juiste kleur tekenen. */
+  color-scheme: light;
+}
+
+/* Donker volgt de instelling van je systeem. Alleen de waarden wisselen;
+   geen enkel component hoeft te weten welke modus aan staat. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #0e0e0e;
+    --card: #1a1a1a;
+    --inset: #232323;
+    --line: #2a2a2a;
+    --line-2: #3a3a3a;
+    --ink: #f2f2f2;
+    --ink-2: #d6d6d6;
+    --ink-3: #9a9a9a;
+    --action: #f2f2f2;
+    --action-text: #000000;
+    --link: #8fb0ff;
+    --link-soft: #1c2742;
+    --hit: #4a3f14;
+    --danger: #ff8a80;
+    --danger-soft: #2e1614;
+    --danger-line: #5c2a26;
+    color-scheme: dark;
+  }
+}
+
+/* De tokens als Tailwind-kleuren, zodat je bg-card, text-ink-3 en
+   border-line kunt schrijven. "inline": de class gebruikt var(--card) zelf,
+   en wisselt dus mee met licht en donker. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-card: var(--card);
+  --color-inset: var(--inset);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-action: var(--action);
+  --color-action-text: var(--action-text);
+  --color-link: var(--link);
+  --color-link-soft: var(--link-soft);
+  --color-hit: var(--hit);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-line: var(--danger-line);
+
+  /* Inter komt uit next/font (zie layout.js); de rest is de terugval. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Iets rondere hoeken dan de standaard, voor elk rounded-md. */
+  --radius-md: 0.625rem;
+}
+
+@layer base {
+  body {
+    background: var(--ground);
+    color: var(--ink);
+  }
+
+  ::placeholder {
+    color: var(--ink-3);
+  }
+
+  /* Vinkjes en de datumkiezer in de tekstkleur, niet in browserblauw. */
+  input,
+  select,
+  textarea {
+    accent-color: var(--ink);
+  }
+}

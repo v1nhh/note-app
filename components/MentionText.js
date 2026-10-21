@@ -11,7 +11,7 @@ export default function MentionText({ text, targets }) {
       <Link
         key={index}
         href={itemHref(part.target.id, part.target.typeName)}
-        className="font-medium text-blue-700 hover:underline"
+        className="font-medium text-link hover:underline"
       >
         {part.text}
       </Link>

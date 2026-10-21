@@ -28,7 +28,7 @@ export default async function TypePage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.TYPES} className="text-sm text-neutral-500 underline">
+      <Link href={ROUTES.TYPES} className="text-sm text-ink-3 underline">
         ← Soorten
       </Link>
 
@@ -41,14 +41,14 @@ export default async function TypePage({ params }) {
           {editable && (
             <Link
               href={ROUTES.editType(type.id)}
-              className="rounded-md border border-neutral-300 px-4 py-2 hover:border-neutral-500"
+              className="rounded-md border border-line-2 px-4 py-2 hover:border-ink-3"
             >
               Soort aanpassen
             </Link>
           )}
           <Link
             href={ROUTES.newItem(type.id)}
-            className="rounded-md bg-neutral-900 px-4 py-2 text-white"
+            className="rounded-md bg-action px-4 py-2 text-action-text"
           >
             Nieuw: {type.name}
           </Link>
@@ -56,7 +56,7 @@ export default async function TypePage({ params }) {
       </div>
 
       {items.length === 0 ? (
-        <p className="mt-10 text-neutral-500">Nog niets van deze soort.</p>
+        <p className="mt-10 text-ink-3">Nog niets van deze soort.</p>
       ) : (
         <ul className="mt-10 flex flex-col gap-4">
           {items.map((item) => {
@@ -67,7 +67,7 @@ export default async function TypePage({ params }) {
               <li key={item.id}>
                 <Link
                   href={ROUTES.item(item.id)}
-                  className="block rounded-md border border-neutral-200 bg-white p-4 hover:border-neutral-400"
+                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
                 >
                   <h2 className="font-semibold">{item.title}</h2>
 
@@ -75,7 +75,7 @@ export default async function TypePage({ params }) {
                     <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
                       {fields.map((field) => (
                         <div key={field[FIELD_KEYS.NAME]} className="contents">
-                          <dt className="text-neutral-500">{field[FIELD_KEYS.NAME]}</dt>
+                          <dt className="text-ink-3">{field[FIELD_KEYS.NAME]}</dt>
                           <dd>{formatFieldValue(field, values[field[FIELD_KEYS.NAME]])}</dd>
                         </div>
                       ))}
@@ -83,7 +83,7 @@ export default async function TypePage({ params }) {
                   )}
 
                   {item.body && (
-                    <p className="mt-3 line-clamp-2 whitespace-pre-wrap text-neutral-700">
+                    <p className="mt-3 line-clamp-2 whitespace-pre-wrap text-ink-2">
                       {item.body}
                     </p>
                   )}

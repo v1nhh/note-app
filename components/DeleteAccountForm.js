@@ -16,7 +16,7 @@ export default function DeleteAccountForm({ summary }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="self-start rounded-md border border-red-300 px-4 py-2 text-sm text-red-700 hover:bg-red-50"
+        className="self-start rounded-md border border-danger-line px-4 py-2 text-sm text-danger hover:bg-danger-soft"
       >
         Account wissen…
       </button>
@@ -26,27 +26,27 @@ export default function DeleteAccountForm({ summary }) {
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-md border border-red-200 bg-red-50 p-4"
+      className="flex flex-col gap-3 rounded-md border border-danger-line bg-danger-soft p-4"
     >
-      <p className="text-sm text-red-900">
+      <p className="text-sm text-danger">
         Dit wist je account en alles wat erin staat: {summary}. Dit kun je niet
         ongedaan maken.
       </p>
 
       <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium text-red-900">Vul je wachtwoord in om te bevestigen</span>
+        <span className="text-sm font-medium text-danger">Vul je wachtwoord in om te bevestigen</span>
         <input
           type="password"
           name={ACCOUNT_FORM.PASSWORD}
           autoComplete="current-password"
           required
           autoFocus
-          className="rounded-md border border-red-300 bg-white px-3 py-2"
+          className="rounded-md border border-danger-line bg-card px-3 py-2"
         />
       </label>
 
       {state.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger">
           {state.error}
         </p>
       )}
@@ -55,14 +55,14 @@ export default function DeleteAccountForm({ summary }) {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-red-700 px-4 py-2 text-sm text-white disabled:opacity-60"
+          className="rounded-md bg-danger px-4 py-2 text-sm text-action-text disabled:opacity-60"
         >
           {isPending ? "Bezig met wissen…" : "Alles definitief wissen"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm hover:border-neutral-500"
+          className="rounded-md border border-line-2 bg-card px-4 py-2 text-sm hover:border-ink-3"
         >
           Annuleren
         </button>

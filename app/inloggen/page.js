@@ -17,7 +17,7 @@ export default async function LoginPage() {
 
       <AuthForm action={login} submitLabel="Inloggen" />
 
-      <p className="mt-6 text-sm text-neutral-500">
+      <p className="mt-6 text-sm text-ink-3">
         Nog geen account?{" "}
         <Link href={ROUTES.REGISTER} className="underline">
           Registreren

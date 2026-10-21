@@ -114,7 +114,7 @@ export default function MentionTextarea({
           id={listId}
           role="listbox"
           aria-label="Verwijzen naar"
-          className="absolute inset-x-0 top-full z-10 mt-1 max-h-64 overflow-auto rounded-md border border-neutral-200 bg-white py-1 shadow-lg"
+          className="absolute inset-x-0 top-full z-10 mt-1 max-h-64 overflow-auto rounded-md border border-line bg-card py-1 shadow-lg"
         >
           {suggestions.map((target, index) => (
             <li
@@ -129,14 +129,14 @@ export default function MentionTextarea({
                 choose(target);
               }}
               className={`flex cursor-pointer items-center justify-between gap-3 px-3 py-2 text-sm ${
-                index === active ? "bg-neutral-100" : ""
+                index === active ? "bg-inset" : ""
               }`}
             >
               <span className="truncate">
                 {target.icon ? `${target.icon} ` : ""}
                 {target.title}
               </span>
-              <span className="shrink-0 text-xs text-neutral-500">{target.typeName}</span>
+              <span className="shrink-0 text-xs text-ink-3">{target.typeName}</span>
             </li>
           ))}
         </ul>

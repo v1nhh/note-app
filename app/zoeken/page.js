@@ -10,7 +10,7 @@ import Highlight from "@/components/Highlight";
 
 export const metadata = { title: "Zoeken" };
 
-const inputClass = "rounded-md border border-neutral-300 bg-white px-3 py-2";
+const inputClass = "rounded-md border border-line-2 bg-card px-3 py-2";
 
 /// Een waarde uit de URL. ?q=a&q=b geeft een lijst; dan nemen we de eerste.
 function readParam(params, name) {
@@ -73,24 +73,24 @@ export default async function SearchPage({ searchParams }) {
             </option>
           ))}
         </select>
-        <button type="submit" className="rounded-md bg-neutral-900 px-4 py-2 text-white">
+        <button type="submit" className="rounded-md bg-action px-4 py-2 text-action-text">
           Zoeken
         </button>
       </Form>
 
       {!searching ? (
-        <p className="mt-10 text-neutral-500">
+        <p className="mt-10 text-ink-3">
           Typ een zoekwoord, of kies een soort om alles van die soort te zien.
         </p>
       ) : results.length === 0 ? (
-        <p className="mt-10 text-neutral-500">
+        <p className="mt-10 text-ink-3">
           Niets gevonden{query.trim() ? ` voor "${query.trim()}"` : ""}
           {selectedType ? ` bij ${selectedType.name}` : ""}.
         </p>
       ) : (
         <>
           {/* aria-live: een schermlezer hoort het aantal na een nieuwe zoekopdracht. */}
-          <p className="mt-10 text-sm text-neutral-500" aria-live="polite">
+          <p className="mt-10 text-sm text-ink-3" aria-live="polite">
             {results.length} {results.length === 1 ? "resultaat" : "resultaten"}
           </p>
 
@@ -99,9 +99,9 @@ export default async function SearchPage({ searchParams }) {
               <li key={item.id}>
                 <Link
                   href={itemHref(item.id, item.type.name)}
-                  className="block rounded-md border border-neutral-200 bg-white p-4 hover:border-neutral-400"
+                  className="block rounded-md border border-line bg-card p-4 hover:border-ink-3"
                 >
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-ink-3">
                     {item.type.icon ? `${item.type.icon} ` : ""}
                     {item.type.name} · {formatDate(item.date)}
                   </p>
@@ -109,7 +109,7 @@ export default async function SearchPage({ searchParams }) {
                     <Highlight text={item.title} query={query} />
                   </h2>
                   {snippet && (
-                    <p className="mt-2 text-sm text-neutral-700">
+                    <p className="mt-2 text-sm text-ink-2">
                       <Highlight text={snippet} query={query} />
                     </p>
                   )}

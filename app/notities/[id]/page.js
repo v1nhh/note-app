@@ -41,42 +41,42 @@ export default async function NotePage({ params }) {
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between">
-        <Link href={ROUTES.HOME} className="text-sm text-neutral-500 underline">
+        <Link href={ROUTES.HOME} className="text-sm text-ink-3 underline">
           ← Alle notities
         </Link>
         <Link
           href={ROUTES.editNote(note.id)}
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:border-neutral-500"
+          className="rounded-md border border-line-2 px-3 py-1.5 text-sm hover:border-ink-3"
         >
           Bewerken
         </Link>
       </div>
 
-      <p className="mt-8 text-sm text-neutral-500">{formatDate(note.date)}</p>
+      <p className="mt-8 text-sm text-ink-3">{formatDate(note.date)}</p>
       <h1 className="mt-1 text-3xl font-semibold">{note.title}</h1>
 
       {note.body ? (
-        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-neutral-800">
+        <p className="mt-6 whitespace-pre-wrap leading-relaxed text-ink">
           {/* Alleen de echte verbindingen worden links, geen losse @'s. */}
           <MentionText text={note.body} targets={linked} />
         </p>
       ) : (
-        <p className="mt-6 text-neutral-500">Deze notitie heeft nog geen tekst.</p>
+        <p className="mt-6 text-ink-3">Deze notitie heeft nog geen tekst.</p>
       )}
 
       {linked.length > 0 && (
-        <section className="mt-12 border-t border-neutral-200 pt-6">
-          <h2 className="text-sm font-semibold text-neutral-500">Gekoppeld aan</h2>
+        <section className="mt-12 border-t border-line pt-6">
+          <h2 className="text-sm font-semibold text-ink-3">Gekoppeld aan</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {linked.map((item) => (
               <li key={item.id}>
                 <Link
                   href={itemHref(item.id, item.typeName)}
-                  className="block rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-sm hover:border-neutral-400"
+                  className="block rounded-md border border-line bg-card px-3 py-1.5 text-sm hover:border-ink-3"
                 >
                   {item.icon ? `${item.icon} ` : ""}
                   {item.title}
-                  <span className="ml-2 text-neutral-500">{item.typeName}</span>
+                  <span className="ml-2 text-ink-3">{item.typeName}</span>
                 </Link>
               </li>
             ))}
