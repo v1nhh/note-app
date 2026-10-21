@@ -19,6 +19,9 @@ export default async function SiteHeader() {
           <Link href={ROUTES.TYPES} className="text-sm text-neutral-600 hover:text-neutral-900">
             Soorten
           </Link>
+          <Link href={ROUTES.SEARCH} className="text-sm text-neutral-600 hover:text-neutral-900">
+            Zoeken
+          </Link>
         </nav>
 
         <div className="flex min-w-0 items-center gap-3">
