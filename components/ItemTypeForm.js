@@ -7,29 +7,40 @@ import { FIELD_KEYS } from "@/lib/fields";
 /// Elke rij krijgt een eigen key. Die mag niet de index zijn: verwijder je rij
 /// 1, dan schuift alles op en hergebruikt React de verkeerde invoervelden.
 let nextRowId = 0;
-function emptyRow() {
+
+/// Een rij in het formulier. original is de naam die het veld had toen je het
+/// formulier opende; bij een nieuwe rij is die leeg. Zo ziet de server of je
+/// een veld hernoemde of een nieuw veld toevoegde.
+function makeRow(field = null) {
   nextRowId += 1;
   return {
     rowId: nextRowId,
-    [FIELD_KEYS.NAME]: "",
-    [FIELD_KEYS.TYPE]: FIELD_TYPES.TEXT,
-    [FIELD_KEYS.REQUIRED]: false,
-    // In het invoerveld tekst met komma's; de server maakt er een lijst van.
-    [FIELD_KEYS.OPTIONS]: "",
+    original: field?.[FIELD_KEYS.NAME] ?? "",
+    [FIELD_KEYS.NAME]: field?.[FIELD_KEYS.NAME] ?? "",
+    [FIELD_KEYS.TYPE]: field?.[FIELD_KEYS.TYPE] ?? FIELD_TYPES.TEXT,
+    [FIELD_KEYS.REQUIRED]: field?.[FIELD_KEYS.REQUIRED] ?? false,
+    // In de database een lijst; in het invoerveld tekst met komma's.
+    [FIELD_KEYS.OPTIONS]: (field?.[FIELD_KEYS.OPTIONS] ?? []).join(", "),
   };
 }
 
 const inputClass = "rounded-md border border-neutral-300 bg-white px-3 py-2";
 
-export default function ItemTypeForm({ action }) {
+/// Hetzelfde formulier voor een nieuwe soort en voor een bestaande. Geef je
+/// type en fields mee, dan staat alles al ingevuld en gaat de id mee.
+export default function ItemTypeForm({ action, type = null, fields = [] }) {
+  const editing = type !== null;
+
   const [state, formAction, isPending] = useActionState(action, {
     error: null,
-    name: "",
-    icon: "",
+    name: type?.name ?? "",
+    icon: type?.icon ?? "",
   });
 
   // De veldrijen zijn state in de browser: erbij en eraf zonder de server.
-  const [rows, setRows] = useState(() => [emptyRow()]);
+  const [rows, setRows] = useState(() =>
+    fields.length > 0 ? fields.map((field) => makeRow(field)) : [makeRow()],
+  );
 
   function updateRow(rowId, key, value) {
     setRows((current) =>
@@ -41,8 +52,19 @@ export default function ItemTypeForm({ action }) {
     setRows((current) => current.filter((row) => row.rowId !== rowId));
   }
 
+  // Welke bestaande velden zijn weg? Die verliezen hun waarden, en dat mag je
+  // weten voordat je bewaart. Zelfde regel als planFieldMigration op de
+  // server: een rij houdt een veld vast via zijn oude naam, of anders via zijn
+  // huidige naam.
+  const kept = new Set(rows.map((row) => row.original || row[FIELD_KEYS.NAME].trim()));
+  const dropped = fields
+    .map((field) => field[FIELD_KEYS.NAME])
+    .filter((name) => !kept.has(name));
+
   return (
     <form action={formAction} className="mt-8 flex flex-col gap-8">
+      {editing && <input type="hidden" name={TYPE_FORM.ID} value={type.id} />}
+
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
           name={TYPE_FORM.NAME}
@@ -65,8 +87,9 @@ export default function ItemTypeForm({ action }) {
       <fieldset className="flex flex-col gap-3">
         <legend className="font-semibold">Velden</legend>
         <p className="text-sm text-neutral-500">
-          Welke gegevens wil je bij elk item van deze soort bijhouden? Een soort
-          zonder velden mag ook.
+          {editing
+            ? "Hernoem je een veld, dan verhuizen de ingevulde waarden mee."
+            : "Welke gegevens wil je bij elk item van deze soort bijhouden? Een soort zonder velden mag ook."}
         </p>
 
         {rows.map((row, index) => (
@@ -74,6 +97,10 @@ export default function ItemTypeForm({ action }) {
             key={row.rowId}
             className="flex flex-col gap-2 rounded-md border border-neutral-200 bg-white p-3 sm:flex-row sm:flex-wrap sm:items-center"
           >
+            {/* Altijd meesturen, ook leeg: de lijsten moeten even lang
+                blijven, zodat de server ze per rij kan samenvoegen. */}
+            <input type="hidden" name={TYPE_FORM.FIELD_ORIGINAL} value={row.original} />
+
             <input
               name={TYPE_FORM.FIELD_NAME}
               value={row[FIELD_KEYS.NAME]}
@@ -132,17 +159,32 @@ export default function ItemTypeForm({ action }) {
               aria-label={`Keuzes voor veld ${index + 1}`}
               className={`${inputClass} sm:basis-full`}
             />
+
+            {row.original && row.original !== row[FIELD_KEYS.NAME].trim() && (
+              <p className="text-xs text-neutral-500 sm:basis-full">
+                Was: {row.original}. De waarden verhuizen mee.
+              </p>
+            )}
           </div>
         ))}
 
         <button
           type="button"
-          onClick={() => setRows((current) => [...current, emptyRow()])}
+          onClick={() => setRows((current) => [...current, makeRow()])}
           className="self-start rounded-md border border-neutral-300 px-3 py-2 text-sm hover:border-neutral-500"
         >
           + Veld toevoegen
         </button>
       </fieldset>
+
+      {/* Een veld weghalen neemt alles mee wat erin stond. Dat zeg je
+          vóór het bewaren, niet erna. */}
+      {dropped.length > 0 && (
+        <div role="status" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+          <p className="font-semibold">Deze velden gaan weg, met alles wat erin staat:</p>
+          <p className="mt-1">{dropped.join(", ")}</p>
+        </div>
+      )}
 
       {state?.error && (
         <p role="alert" className="text-sm text-red-700">
@@ -153,9 +195,15 @@ export default function ItemTypeForm({ action }) {
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-md bg-neutral-900 px-4 py-2 text-white disabled:opacity-60"
+        className={`self-start rounded-md px-4 py-2 text-white disabled:opacity-60 ${
+          dropped.length > 0 ? "bg-red-700" : "bg-neutral-900"
+        }`}
       >
-        {isPending ? "Bezig…" : "Soort bewaren"}
+        {isPending
+          ? "Bezig…"
+          : dropped.length > 0
+            ? "Bewaren en velden weghalen"
+            : "Soort bewaren"}
       </button>
     </form>
   );

@@ -9,7 +9,7 @@ import {
   formatFieldValue,
   FIELD_KEYS,
 } from "@/lib/fields";
-import { ROUTES } from "@/lib/constants";
+import { NOTE_TYPE, ROUTES } from "@/lib/constants";
 
 export default async function TypePage({ params }) {
   const user = await requireUser();
@@ -24,6 +24,7 @@ export default async function TypePage({ params }) {
   });
 
   const fields = parseFieldDefinitions(type.fieldDefinitions);
+  const editable = type.name !== NOTE_TYPE.name;
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
@@ -36,12 +37,22 @@ export default async function TypePage({ params }) {
           {type.icon ? `${type.icon} ` : ""}
           {type.name}
         </h1>
-        <Link
-          href={ROUTES.newItem(type.id)}
-          className="rounded-md bg-neutral-900 px-4 py-2 text-white"
-        >
-          Nieuw: {type.name}
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {editable && (
+            <Link
+              href={ROUTES.editType(type.id)}
+              className="rounded-md border border-neutral-300 px-4 py-2 hover:border-neutral-500"
+            >
+              Soort aanpassen
+            </Link>
+          )}
+          <Link
+            href={ROUTES.newItem(type.id)}
+            className="rounded-md bg-neutral-900 px-4 py-2 text-white"
+          >
+            Nieuw: {type.name}
+          </Link>
+        </div>
       </div>
 
       {items.length === 0 ? (
