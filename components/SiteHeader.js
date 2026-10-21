@@ -11,10 +11,15 @@ export default async function SiteHeader() {
 
   return (
     <header className="border-b border-neutral-200 bg-white">
-      <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 px-6 py-3">
-        <Link href={ROUTES.HOME} className="font-semibold">
-          Noteboek
-        </Link>
+      <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-3">
+        <nav className="flex items-center gap-4">
+          <Link href={ROUTES.HOME} className="font-semibold">
+            Noteboek
+          </Link>
+          <Link href={ROUTES.TYPES} className="text-sm text-neutral-600 hover:text-neutral-900">
+            Soorten
+          </Link>
+        </nav>
 
         <div className="flex min-w-0 items-center gap-3">
           <span className="truncate text-sm text-neutral-500">{user.email}</span>
