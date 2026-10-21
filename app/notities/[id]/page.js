@@ -1,21 +1,20 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/session";
+import { findNoteForUser } from "@/lib/notes";
 import { ROUTES } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 
 export default async function NotePage({ params }) {
+  const user = await requireUser();
+
   // In Next 16 is params een promise: de waarden uit de URL komen binnen
   // zodra de server ze kent.
   const { id } = await params;
 
-  // De id komt uit de URL en kan van alles zijn: /notities/abc levert NaN op.
-  const noteId = Number(id);
-  if (!Number.isInteger(noteId)) notFound();
-
-  const note = await prisma.item.findUnique({ where: { id: noteId } });
-
-  // Onbekend of verwijderd? Dan de 404-pagina, geen lege pagina.
+  // Onbekend, verwijderd of van iemand anders: dan de 404-pagina. Zo verraad
+  // je ook niet dat er een notitie met die id bestaat.
+  const note = await findNoteForUser(user.id, id);
   if (!note) notFound();
 
   return (

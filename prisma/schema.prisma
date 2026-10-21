@@ -1,6 +1,6 @@
-// Datamodel: drie tabellen. Een nieuwe itemsoort toevoegen mag nooit een
-// migratie of codewijziging vereisen, daarom staan velddefinities en
-// veldwaarden als JSON-tekst in 1 kolom, niet als aparte kolommen
+// Datamodel: drie tabellen voor de inhoud, plus accounts en sessies. Een
+// nieuwe itemsoort toevoegen mag nooit een migratie of codewijziging vereisen.
+// Daarom staan velddefinities en veldwaarden als JSON-tekst in één kolom.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,11 +10,45 @@ datasource db {
   provider = "sqlite"
 }
 
-/// Een itemsoort die de gebruiker zelf kan invullen/maken, bv: "persoon", "boek", "plek"
+/// Een account. Het wachtwoord staat hier nooit als tekst in, alleen de hash
+/// in PHC-formaat. Het algoritme en de parameters zitten daar zelf in:
+/// $argon2id$v=19$m=19456,t=2,p=1$<salt>$<hash>
+model User {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  passwordHash String
+
+  sessions  Session[]
+  itemTypes ItemType[]
+  items     Item[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("gebruikers")
+}
+
+/// Een ingelogde sessie. De id is de SHA-256 van het token in de cookie, niet
+/// het token zelf: wie de database steelt, kan er niet mee inloggen.
+model Session {
+  id     String @id
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("sessies")
+}
+
+/// Een itemsoort die de gebruiker zelf definieert: "persoon", "boek", "plek".
 model ItemType {
-  id   Int     @id @default(autoincrement())
-  name String  @unique
-  icon String?
+  id     Int     @id @default(autoincrement())
+  userId Int
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name   String
+  icon   String?
 
   /// JSON-array met velddefinities:
   /// [{ "name": "verjaardag", "type": "date", "required": false }]
@@ -25,12 +59,16 @@ model ItemType {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Soortnamen zijn uniek per gebruiker, niet in de hele app.
+  @@unique([userId, name])
   @@map("soorten")
 }
 
 /// Alles wat de gebruiker vastlegt: een notitie, een persoon, een boek.
 model Item {
   id     Int      @id @default(autoincrement())
+  userId Int
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   typeId Int
   type   ItemType @relation(fields: [typeId], references: [id], onDelete: Cascade)
 
@@ -48,11 +86,12 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([userId])
   @@index([typeId])
   @@map("items")
 }
 
-/// Connection tussen twee items. Eén keer opgeslagen, in beide richtingen
+/// Koppeling tussen twee items. Eén keer opgeslagen, in beide richtingen
 /// leesbaar: notitie A -> persoon B levert de notitie ook op de pagina van B.
 model Connection {
   id Int @id @default(autoincrement())

@@ -3,14 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/session";
 import { NOTE_TYPE, NOTE_FORM, ROUTES } from "@/lib/constants";
 
-/// Zorgt dat de soort "notitie" bestaat en geeft hem terug.
-async function getNoteType() {
+/// Zorgt dat deze gebruiker een soort "notitie" heeft en geeft hem terug.
+/// Elke gebruiker heeft zijn eigen soorten.
+async function getNoteType(userId) {
   return prisma.itemType.upsert({
-    where: { name: NOTE_TYPE.name },
+    where: { userId_name: { userId, name: NOTE_TYPE.name } },
     update: {},
-    create: { name: NOTE_TYPE.name, icon: NOTE_TYPE.icon },
+    create: { userId, name: NOTE_TYPE.name, icon: NOTE_TYPE.icon },
   });
 }
 
@@ -22,51 +24,53 @@ function readId(formData) {
 }
 
 export async function createNote(formData) {
+  // Een server action is van buitenaf aan te roepen, ook zonder de pagina.
+  // Dus ook hier controleren wie het is, niet alleen op de pagina.
+  const user = await requireUser();
+
   const title = formData.get(NOTE_FORM.TITLE)?.trim();
   const body = formData.get(NOTE_FORM.BODY)?.trim() ?? "";
 
   // Voorlopig stil weigeren; echte validatie met foutmelding komt later.
   if (!title) return;
 
-  const noteType = await getNoteType();
+  const noteType = await getNoteType(user.id);
 
   await prisma.item.create({
-    data: { typeId: noteType.id, title, body },
+    data: { userId: user.id, typeId: noteType.id, title, body },
   });
 
-  // Vertelt Next dat de gegevens van "/" verouderd zijn, zodat de lijst
-  // opnieuw van de server wordt opgehaald.
   revalidatePath(ROUTES.HOME);
 }
 
 export async function updateNote(formData) {
+  const user = await requireUser();
   const id = readId(formData);
   const title = formData.get(NOTE_FORM.TITLE)?.trim();
   const body = formData.get(NOTE_FORM.BODY)?.trim() ?? "";
 
   if (!id || !title) return;
 
-  await prisma.item.update({
-    where: { id },
+  // updateMany in plaats van update: met userId erbij raakt een id van iemand
+  // anders nul rijen, in plaats van zijn notitie te overschrijven.
+  await prisma.item.updateMany({
+    where: { id, userId: user.id },
     data: { title, body },
   });
 
-  // De lijst én de notitiepagina tonen de oude tekst nog: allebei verversen.
   revalidatePath(ROUTES.HOME);
   revalidatePath(ROUTES.note(id));
-
-  // Na bewaren terug naar de notitie, zodat je ziet wat er nu staat.
   redirect(ROUTES.note(id));
 }
 
 export async function deleteNote(formData) {
+  const user = await requireUser();
   const id = readId(formData);
   if (!id) return;
 
-  await prisma.item.delete({ where: { id } });
+  // Zelfde reden als hierboven: alleen je eigen notitie kan weg.
+  await prisma.item.deleteMany({ where: { id, userId: user.id } });
 
   revalidatePath(ROUTES.HOME);
-
-  // De pagina van de notitie bestaat niet meer, dus terug naar de lijst.
   redirect(ROUTES.HOME);
 }

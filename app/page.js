@@ -1,22 +1,26 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { createNote } from "@/app/actions";
+import { requireUser } from "@/lib/session";
 import { NOTE_TYPE, ROUTES } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import NoteForm from "@/components/NoteForm";
 
 // Deze component draait op de server, dus hij mag de database direct lezen.
 export default async function HomePage() {
-  // Alleen notities: straks komen er ook personen, boeken en andere soorten
-  // in dezelfde tabel.
+  // Niet ingelogd? Dan stuurt requireUser je naar de inlogpagina.
+  const user = await requireUser();
+
+  // Alleen je eigen notities: straks komen er ook personen, boeken en andere
+  // soorten in dezelfde tabel.
   const notes = await prisma.item.findMany({
-    where: { type: { name: NOTE_TYPE.name } },
+    where: { userId: user.id, type: { name: NOTE_TYPE.name } },
     orderBy: { date: "desc" },
   });
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Noteboek</h1>
+      <h1 className="text-3xl font-semibold">Notities</h1>
 
       <div className="mt-8">
         <NoteForm action={createNote} />
