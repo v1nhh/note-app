@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
+import { logout } from "@/app/auth-actions";
 import { formatDate } from "@/lib/format";
 import { NOTE_TYPE } from "@/lib/constants";
 import DeleteAccountForm from "@/components/DeleteAccountForm";
@@ -35,8 +36,17 @@ export default async function SettingsPage() {
       <h1 className="view-title">Instellingen</h1>
 
       <section className="mt-10 card">
-        <h2 className="font-semibold">Account</h2>
-        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <h2 className="font-semibold">Account</h2>
+          {/* Uitloggen staat hier en niet in het dock: je doet het zelden. */}
+          <form action={logout}>
+            <button type="submit" className="btn btn-sm">
+              Uitloggen
+            </button>
+          </form>
+        </div>
+
+        <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
           <dt className="text-ink-3">E-mailadres</dt>
           <dd className="break-all">{user.email}</dd>
           <dt className="text-ink-3">Lid sinds</dt>

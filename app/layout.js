@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SiteHeader from "@/components/SiteHeader";
+import { getCurrentUser } from "@/lib/session";
+import Dock from "@/components/Dock";
 
 // next/font haalt het lettertype op tijdens het bouwen en serveert het zelf.
 // De browser vraagt dus niets aan Google, en er verspringt geen tekst tijdens
@@ -16,12 +17,15 @@ export const metadata = {
   description: "Een notitieboek waarin je zelf bepaalt wat je bijhoudt.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  // Uitgelogd geen dock: op de inlogpagina heb je nergens heen te gaan.
+  const user = await getCurrentUser();
+
   return (
     <html lang="nl" className={inter.variable}>
       <body className="min-h-screen bg-ground font-sans text-ink antialiased">
-        <SiteHeader />
         {children}
+        {user && <Dock />}
       </body>
     </html>
   );
