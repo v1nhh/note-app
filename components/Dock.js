@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ROUTES } from "@/lib/constants";
-import { IconNotes, IconTypes, IconSearch, IconSettings } from "@/components/icons";
+import {
+  IconNotes,
+  IconTypes,
+  IconGraph,
+  IconSearch,
+  IconSettings,
+} from "@/components/icons";
 
 /// De plekken in het dock. match: bij welke paden deze plek "aan" staat. Een
 /// notitie hoort bij Notities, een item bij Soorten, ook al heeft het item
@@ -20,6 +26,12 @@ const PLACES = [
     label: "Soorten",
     Icon: IconTypes,
     match: (path) => path.startsWith(ROUTES.TYPES) || path.startsWith("/items"),
+  },
+  {
+    href: ROUTES.GRAPH,
+    label: "Web",
+    Icon: IconGraph,
+    match: (path) => path.startsWith(ROUTES.GRAPH),
   },
   {
     href: ROUTES.SEARCH,
@@ -57,7 +69,7 @@ export default function Dock() {
                 href={href}
                 // aria-current vertelt een schermlezer "hier ben je nu".
                 aria-current={active ? "page" : undefined}
-                className={`flex min-w-16 flex-col items-center gap-1 rounded-full px-3 py-2 text-[0.6875rem] font-medium transition-colors ${
+                className={`flex min-w-14 flex-col items-center gap-1 rounded-full px-2.5 py-2 text-[0.6875rem] font-medium transition-colors sm:min-w-16 sm:px-3 ${
                   active ? "bg-action text-action-text" : "text-ink-3 hover:bg-inset hover:text-ink"
                 }`}
               >
