@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
-import { syncConnections } from "@/lib/links";
+import { findNoteForUser } from "@/lib/notes";
+import { renameMentions, syncConnections } from "@/lib/links";
 import { NOTE_TYPE, NOTE_FORM, ROUTES } from "@/lib/constants";
 
 /// Zorgt dat deze gebruiker een soort "notitie" heeft en geeft hem terug.
@@ -52,28 +53,29 @@ export async function createNote(formData) {
 
 export async function updateNote(formData) {
   const user = await requireUser();
-  const id = readId(formData);
   const title = formData.get(NOTE_FORM.TITLE)?.trim();
   const body = formData.get(NOTE_FORM.BODY)?.trim() ?? "";
 
-  if (!id || !title) return;
+  // Alleen je eigen notitie: een id van iemand anders geeft hier null.
+  const note = await findNoteForUser(user.id, readId(formData));
+  if (!note || !title) return;
 
-  // updateMany in plaats van update: met userId erbij raakt een id van iemand
-  // anders nul rijen, in plaats van zijn notitie te overschrijven.
-  const { count } = await prisma.item.updateMany({
-    where: { id, userId: user.id },
-    data: { title, body },
+  // Nieuwe titel en verwijzingen in andere notities horen bij elkaar: samen
+  // in één transactie, zodat het nooit maar half gebeurt.
+  await prisma.$transaction(async (tx) => {
+    await renameMentions(user.id, note.id, note.title, title, tx);
+    await tx.item.update({
+      where: { id: note.id },
+      data: { title, body },
+    });
   });
 
-  // Niet van jou (of al weg): dan ook geen verbindingen aanpassen.
-  if (count === 0) return;
-
   // Nieuwe @ erbij of eentje weggehaald: de verbindingen volgen de tekst.
-  await syncConnections(user.id, id, body);
+  await syncConnections(user.id, note.id, body);
 
   revalidatePath(ROUTES.HOME);
-  revalidatePath(ROUTES.note(id));
-  redirect(ROUTES.note(id));
+  revalidatePath(ROUTES.note(note.id));
+  redirect(ROUTES.note(note.id));
 }
 
 export async function deleteNote(formData) {
@@ -81,8 +83,8 @@ export async function deleteNote(formData) {
   const id = readId(formData);
   if (!id) return;
 
-  // Zelfde reden als hierboven: alleen je eigen notitie kan weg. Zijn
-  // verbindingen gaan vanzelf mee (onDelete: Cascade in het schema).
+  // Alleen je eigen notitie kan weg: met userId erbij raakt een id van iemand
+  // anders nul rijen. Zijn verbindingen gaan vanzelf mee (onDelete: Cascade).
   await prisma.item.deleteMany({ where: { id, userId: user.id } });
 
   revalidatePath(ROUTES.HOME);
