@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { updateNote } from "@/app/actions";
 import { requireUser } from "@/lib/session";
 import { findNoteForUser } from "@/lib/notes";
+import { mentionTargets } from "@/lib/links";
 import { ROUTES } from "@/lib/constants";
 import NoteForm from "@/components/NoteForm";
 import DeleteNoteButton from "@/components/DeleteNoteButton";
@@ -14,6 +15,8 @@ export default async function EditNotePage({ params }) {
   const note = await findNoteForUser(user.id, id);
   if (!note) notFound();
 
+  const targets = await mentionTargets(user.id);
+
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <Link href={ROUTES.note(note.id)} className="text-sm text-neutral-500 underline">
@@ -23,7 +26,12 @@ export default async function EditNotePage({ params }) {
       <h1 className="mt-8 text-2xl font-semibold">Notitie bewerken</h1>
 
       <div className="mt-6">
-        <NoteForm action={updateNote} note={note} submitLabel="Wijzigingen bewaren" />
+        <NoteForm
+          action={updateNote}
+          note={note}
+          targets={targets}
+          submitLabel="Wijzigingen bewaren"
+        />
       </div>
 
       <div className="mt-12 border-t border-neutral-200 pt-6">

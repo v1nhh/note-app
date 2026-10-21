@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { createNote } from "@/app/actions";
 import { requireUser } from "@/lib/session";
+import { mentionTargets } from "@/lib/links";
 import { NOTE_TYPE, ROUTES } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import NoteForm from "@/components/NoteForm";
@@ -11,19 +12,22 @@ export default async function HomePage() {
   // Niet ingelogd? Dan stuurt requireUser je naar de inlogpagina.
   const user = await requireUser();
 
-  // Alleen je eigen notities: straks komen er ook personen, boeken en andere
-  // soorten in dezelfde tabel.
-  const notes = await prisma.item.findMany({
-    where: { userId: user.id, type: { name: NOTE_TYPE.name } },
-    orderBy: { date: "desc" },
-  });
+  // Alleen je eigen notities: personen, boeken en andere soorten staan in
+  // dezelfde tabel, maar horen niet in deze lijst.
+  const [notes, targets] = await Promise.all([
+    prisma.item.findMany({
+      where: { userId: user.id, type: { name: NOTE_TYPE.name } },
+      orderBy: { date: "desc" },
+    }),
+    mentionTargets(user.id),
+  ]);
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <h1 className="text-3xl font-semibold">Notities</h1>
 
       <div className="mt-8">
-        <NoteForm action={createNote} />
+        <NoteForm action={createNote} targets={targets} />
       </div>
 
       {notes.length === 0 ? (
