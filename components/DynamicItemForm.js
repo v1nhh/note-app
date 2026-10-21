@@ -11,26 +11,32 @@ const inputClass = "rounded-md border border-neutral-300 bg-white px-3 py-2";
 /// Het formulier voor een item. Titel en tekst zijn vast; de rest komt uit de
 /// velddefinities van de soort. Er staat nergens in de code welke velden een
 /// "persoon" of een "boek" heeft.
+///
+/// Zonder item: een nieuw item. Met item ({ id, title, body, values }): het
+/// bestaande item bewerken, met alles al ingevuld.
 export default function DynamicItemForm({
   action,
   type,
   fields,
+  item = null,
   targets = [],
   submitLabel = "Bewaren",
 }) {
-  // De action geeft bij een fout alles terug wat er ingevuld was, zodat het
-  // formulier niet leeg is.
+  // De beginwaarde komt uit het item (bewerken) of is leeg (nieuw). Na een
+  // fout geeft de action terug wat er ingevuld was, zodat niets verdwijnt.
   const [state, formAction, isPending] = useActionState(action, {
     error: null,
-    title: "",
-    body: "",
-    values: {},
+    title: item?.title ?? "",
+    body: item?.body ?? "",
+    values: item?.values ?? {},
   });
 
   return (
     <form action={formAction} className="mt-8 flex flex-col gap-5">
-      {/* De server moet weten onder welke soort het item komt. */}
+      {/* De server moet weten onder welke soort het item komt, en bij
+          bewerken welk item het is. */}
       <input type="hidden" name={ITEM_FORM.TYPE_ID} value={type.id} />
+      {item && <input type="hidden" name={ITEM_FORM.ID} value={item.id} />}
 
       <label className="flex flex-col gap-1.5">
         <span className="text-sm font-medium">Titel *</span>
@@ -62,7 +68,8 @@ export default function DynamicItemForm({
           name={ITEM_FORM.BODY}
           defaultValue={state.body}
           targets={targets}
-          rows={4}
+          excludeId={item?.id ?? null}
+          rows={item ? 8 : 4}
           aria-labelledby="item-body-label"
           placeholder="Typ @ om naar iemand of iets te verwijzen."
           className={inputClass}

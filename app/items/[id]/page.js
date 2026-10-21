@@ -29,9 +29,17 @@ export default async function ItemPage({ params }) {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href={ROUTES.type(item.type.id)} className="text-sm text-neutral-500 underline">
-        ← {item.type.name}
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link href={ROUTES.type(item.type.id)} className="text-sm text-neutral-500 underline">
+          ← {item.type.name}
+        </Link>
+        <Link
+          href={ROUTES.editItem(item.id)}
+          className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:border-neutral-500"
+        >
+          Bewerken
+        </Link>
+      </div>
 
       <p className="mt-8 text-sm text-neutral-500">
         {item.type.icon ? `${item.type.icon} ` : ""}
