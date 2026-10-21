@@ -4,13 +4,20 @@ import { useActionState } from "react";
 import { ITEM_FORM } from "@/lib/constants";
 import { FIELD_KEYS } from "@/lib/fields";
 import FieldInput from "@/components/FieldInput";
+import MentionTextarea from "@/components/MentionTextarea";
 
 const inputClass = "rounded-md border border-neutral-300 bg-white px-3 py-2";
 
 /// Het formulier voor een item. Titel en tekst zijn vast; de rest komt uit de
 /// velddefinities van de soort. Er staat nergens in de code welke velden een
 /// "persoon" of een "boek" heeft.
-export default function DynamicItemForm({ action, type, fields, submitLabel = "Bewaren" }) {
+export default function DynamicItemForm({
+  action,
+  type,
+  fields,
+  targets = [],
+  submitLabel = "Bewaren",
+}) {
   // De action geeft bij een fout alles terug wat er ingevuld was, zodat het
   // formulier niet leeg is.
   const [state, formAction, isPending] = useActionState(action, {
@@ -46,15 +53,21 @@ export default function DynamicItemForm({ action, type, fields, submitLabel = "B
         </label>
       ))}
 
-      <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium">Notitie</span>
-        <textarea
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium" id="item-body-label">
+          Notitie
+        </span>
+        {/* Een MentionTextarea houdt zijn eigen tekst vast, ook na een fout. */}
+        <MentionTextarea
           name={ITEM_FORM.BODY}
-          rows={4}
           defaultValue={state.body}
+          targets={targets}
+          rows={4}
+          aria-labelledby="item-body-label"
+          placeholder="Typ @ om naar iemand of iets te verwijzen."
           className={inputClass}
         />
-      </label>
+      </div>
 
       {state.error && (
         <p role="alert" className="text-sm text-red-700">

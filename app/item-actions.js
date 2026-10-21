@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { findTypeForUser } from "@/lib/types";
+import { syncConnections } from "@/lib/links";
 import { ITEM_FORM, ROUTES } from "@/lib/constants";
 import {
   parseFieldDefinitions,
@@ -36,7 +37,7 @@ export async function createItem(previousState, formData) {
   const invalid = validateFieldValues(fields, values);
   if (invalid) return { error: invalid, ...previous };
 
-  await prisma.item.create({
+  const item = await prisma.item.create({
     data: {
       userId: user.id,
       typeId: type.id,
@@ -47,10 +48,12 @@ export async function createItem(previousState, formData) {
     },
   });
 
+  // Ook in de tekst van een item wordt elke @ een verbinding.
+  await syncConnections(user.id, item.id, body);
+
   revalidatePath(ROUTES.type(type.id));
   revalidatePath(ROUTES.TYPES);
 
-  // Terug naar de soort: daar staat het nieuwe item met zijn velden. Een eigen
-  // pagina per item komt bij stap 8, met de terugkoppelingen.
-  redirect(ROUTES.type(type.id));
+  // Naar het nieuwe item: daar staan zijn velden en wie hem noemt.
+  redirect(ROUTES.item(item.id));
 }
