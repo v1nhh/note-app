@@ -25,7 +25,13 @@ export default async function SiteHeader() {
         </nav>
 
         <div className="flex min-w-0 items-center gap-3">
-          <span className="truncate text-sm text-neutral-500">{user.email}</span>
+          <Link
+            href={ROUTES.SETTINGS}
+            className="truncate text-sm text-neutral-500 hover:text-neutral-900"
+            title="Instellingen"
+          >
+            {user.email}
+          </Link>
           <form action={logout}>
             <button
               type="submit"
