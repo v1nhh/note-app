@@ -21,10 +21,7 @@ export default async function TypesPage() {
     <main className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-3xl font-semibold">Soorten</h1>
-        <Link
-          href={ROUTES.NEW_TYPE}
-          className="rounded-md bg-neutral-900 px-4 py-2 text-white"
-        >
+        <Link href={ROUTES.NEW_TYPE} className="rounded-md bg-neutral-900 px-4 py-2 text-white">
           Nieuwe soort
         </Link>
       </div>
@@ -42,30 +39,35 @@ export default async function TypesPage() {
             const fields = parseFieldDefinitions(type.fieldDefinitions);
 
             return (
-              <li key={type.id} className="rounded-md border border-neutral-200 bg-white p-4">
-                <h2 className="font-semibold">
-                  {type.icon ? `${type.icon} ` : ""}
-                  {type.name}
-                </h2>
-                <p className="mt-1 text-sm text-neutral-500">
-                  {type._count.items} {type._count.items === 1 ? "item" : "items"}
-                </p>
+              <li key={type.id}>
+                <Link
+                  href={ROUTES.type(type.id)}
+                  className="block rounded-md border border-neutral-200 bg-white p-4 hover:border-neutral-400"
+                >
+                  <h2 className="font-semibold">
+                    {type.icon ? `${type.icon} ` : ""}
+                    {type.name}
+                  </h2>
+                  <p className="mt-1 text-sm text-neutral-500">
+                    {type._count.items} {type._count.items === 1 ? "item" : "items"}
+                  </p>
 
-                {fields.length > 0 ? (
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {fields.map((field) => (
-                      <li
-                        key={field[FIELD_KEYS.NAME]}
-                        className="rounded-md border border-neutral-200 px-2 py-1 text-sm text-neutral-600"
-                      >
-                        {field[FIELD_KEYS.NAME]} · {FIELD_TYPE_LABELS[field[FIELD_KEYS.TYPE]]}
-                        {field[FIELD_KEYS.REQUIRED] ? " · verplicht" : ""}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-3 text-sm text-neutral-500">Geen eigen velden.</p>
-                )}
+                  {fields.length > 0 ? (
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {fields.map((field) => (
+                        <li
+                          key={field[FIELD_KEYS.NAME]}
+                          className="rounded-md border border-neutral-200 px-2 py-1 text-sm text-neutral-600"
+                        >
+                          {field[FIELD_KEYS.NAME]} · {FIELD_TYPE_LABELS[field[FIELD_KEYS.TYPE]]}
+                          {field[FIELD_KEYS.REQUIRED] ? " · verplicht" : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-sm text-neutral-500">Geen eigen velden.</p>
+                  )}
+                </Link>
               </li>
             );
           })}
