@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session";
 import { readTheme } from "@/lib/theme";
 import { THEMES } from "@/lib/constants";
 import Dock from "@/components/Dock";
+import SearchDialog from "@/components/SearchDialog";
 
 // next/font haalt het lettertype op tijdens het bouwen en serveert het zelf.
 // De browser vraagt dus niets aan Google, en er verspringt geen tekst tijdens
@@ -20,7 +21,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // Uitgelogd geen dock: op de inlogpagina heb je nergens heen te gaan.
+  // Uitgelogd geen dock en geen zoekvenster: er valt niets te zoeken.
   const [user, theme] = await Promise.all([getCurrentUser(), readTheme()]);
 
   return (
@@ -33,7 +34,12 @@ export default async function RootLayout({ children }) {
     >
       <body className="min-h-screen bg-ground font-sans text-ink antialiased">
         {children}
-        {user && <Dock />}
+        {user && (
+          <>
+            <Dock />
+            <SearchDialog />
+          </>
+        )}
       </body>
     </html>
   );
